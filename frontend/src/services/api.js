@@ -4,7 +4,7 @@ const API_BASE = import.meta.env.VITE_API_BASE || '/api';
 
 // Helper to get auth headers
 async function getAuthHeaders() {
-  const user = auth.currentUser
+  const user = auth?.currentUser
   if (!user) throw new Error('Not authenticated')
 
 
@@ -120,7 +120,7 @@ export const authApi = {
 export const uploadApi = {
   // Upload PDF and extract text
   async uploadPdf(file) {
-    const user = auth.currentUser
+    const user = auth?.currentUser
     if (!user) throw new Error('Not authenticated')
 
 
@@ -141,7 +141,7 @@ export const uploadApi = {
 
   // Extract text from PDF (re-process)
   async extractText(file) {
-    const user = auth.currentUser
+    const user = auth?.currentUser
     if (!user) throw new Error('Not authenticated')
 
 
@@ -261,7 +261,7 @@ export const resumeApi = {
 
   // Download resume as PDF
   async downloadPdf(resumeId, version = 'enhanced') {
-    const user = auth.currentUser
+    const user = auth?.currentUser
     if (!user) throw new Error('Not authenticated')
 
     const token = await user.getIdToken()

@@ -23,6 +23,7 @@ import interviewRoutes from './routes/interview.js';
 import userProfileRoutes from './routes/userProfile.js';
 import twoFactorRoutes from './routes/twoFactor.js';
 import aiRoutes from './routes/ai.js';
+import emailTrackingRoutes from './routes/emailTracking.js';
 
 import { globalErrorHandler } from './middleware/globalErrorHandler.js';
 import {
@@ -219,6 +220,7 @@ app.use('/api/user-profiles', userProfileRoutes);
 app.use('/api/auth/2fa', twoFactorRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/email-tracking', emailTrackingRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });

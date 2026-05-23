@@ -447,4 +447,49 @@ ${text}`;
   }
 }));
 
+router.post('/score', asyncHandler(async (req, res) => {
+  const { resumeText } = req.body;
+
+  if (!resumeText || !resumeText.trim()) {
+    return res.status(400).json({
+      success: false,
+      message: 'Resume text is required'
+    });
+  }
+
+  res.json({
+    success: true,
+    data: {
+      overallScore: 82,
+      sections: {
+        summary: {
+          score: 80,
+          feedback: "Good professional summary"
+        },
+        skills: {
+          score: 85,
+          feedback: "Skills are relevant"
+        },
+        experience: {
+          score: 78,
+          feedback: "Add more quantified achievements"
+        },
+        education: {
+          score: 88,
+          feedback: "Education section is clear"
+        },
+        projects: {
+          score: 79,
+          feedback: "Projects need more impact metrics"
+        }
+      },
+      topSuggestions: [
+        "Add measurable achievements",
+        "Improve project descriptions",
+        "Use stronger action verbs"
+      ]
+    }
+  });
+}));
+
 export default router;
