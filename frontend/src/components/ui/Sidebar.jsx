@@ -146,10 +146,14 @@ export const MobileSidebar = ({
                 {...props}
             >
                 <div className="flex justify-end z-20 w-full">
-                    <Menu
-                        className="text-muted-foreground cursor-pointer hover:text-foreground transition-colors"
+                    <button
                         onClick={() => setOpen(!open)}
-                    />
+                        className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background"
+                        aria-label={open ? "Close sidebar menu" : "Open sidebar menu"}
+                        aria-expanded={open}
+                    >
+                        <Menu className="w-6 h-6" />
+                    </button>
                 </div>
                 <AnimatePresence>
                     {open && (
@@ -166,12 +170,13 @@ export const MobileSidebar = ({
                                 className
                             )}
                         >
-                            <div
-                                className="absolute right-6 top-6 z-50 text-muted-foreground cursor-pointer hover:text-foreground transition-colors"
+                            <button
+                                className="absolute right-6 top-6 z-50 p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background"
                                 onClick={() => setOpen(!open)}
+                                aria-label="Close sidebar menu"
                             >
                                 <X className="w-6 h-6" />
-                            </div>
+                            </button>
                             {children}
                         </motion.div>
                     )}

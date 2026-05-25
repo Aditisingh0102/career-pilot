@@ -1,4 +1,5 @@
 import path from 'path';
+import { ApiError } from './errorHandler.js';
 import fs from 'fs/promises';
 
 // Allowed MIME types and their magic bytes
@@ -96,19 +97,13 @@ export const validateUpload = async (req, res, next) => {
   try {
     // 1. Check file exists
     if (!file) {
-      return res.status(400).json({
-        success: false,
-        message: 'No file uploaded.',
-      });
+      return next(new ApiError(400, 'No file uploaded.'));
     }
 
     // 2. Check file size
     if (file.size > MAX_FILE_SIZE) {
       await cleanup();
-      return res.status(400).json({
-        success: false,
-        message: `File too large. Maximum size is ${MAX_FILE_SIZE / 1024 / 1024}MB.`,
-      });
+      return next(new ApiError(400, `File too large. Maximum size is ${MAX_FILE_SIZE / 1024 / 1024}MB.`));
     }
 
     // 3. Check file extension
@@ -116,29 +111,20 @@ export const validateUpload = async (req, res, next) => {
     const allowedExtensions = Object.values(ALLOWED_TYPES).map((t) => t.extension);
     if (!allowedExtensions.includes(ext)) {
       await cleanup();
-      return res.status(400).json({
-        success: false,
-        message: `Invalid file type. Allowed types: ${allowedExtensions.join(', ')}`,
-      });
+      return next(new ApiError(400, `Invalid file type. Allowed types: ${allowedExtensions.join(', ')}`));
     }
 
     // 4. Check MIME type
     const allowedMime = ALLOWED_TYPES[file.mimetype];
     if (!allowedMime) {
       await cleanup();
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid MIME type. Only PDF files are allowed.',
-      });
+      return next(new ApiError(400, 'Invalid MIME type. Only PDF files are allowed.'));
     }
 
     // 5. Magic byte validation from temporary disk file
     if (!file.path) {
       await cleanup();
-      return res.status(400).json({
-        success: false,
-        message: 'File upload path is missing.',
-      });
+      return next(new ApiError(400, 'File upload path is missing.'));
     }
 
     let buffer;
@@ -147,27 +133,18 @@ export const validateUpload = async (req, res, next) => {
     } catch (err) {
       console.error('[UploadValidator] Error reading file header:', err.message);
       await cleanup();
-      return res.status(400).json({
-        success: false,
-        message: 'File is unreadable or corrupted.',
-      });
+      return next(new ApiError(400, 'File is unreadable or corrupted.'));
     }
 
     if (!buffer || buffer.length < 4) {
       await cleanup();
-      return res.status(400).json({
-        success: false,
-        message: 'File is too small or corrupted.',
-      });
+      return next(new ApiError(400, 'File is too small or corrupted.'));
     }
 
     const isValidMagicBytes = validateMagicBytes(buffer, allowedMime);
     if (!isValidMagicBytes) {
       await cleanup();
-      return res.status(400).json({
-        success: false,
-        message: 'File content does not match its extension. Upload rejected.',
-      });
+      return next(new ApiError(400, 'File content does not match its extension. Please upload a valid PDF.'));
     }
 
     // 6. Daily limit check (per user)
@@ -175,19 +152,13 @@ export const validateUpload = async (req, res, next) => {
     const withinLimit = checkDailyLimit(userId, file.size);
     if (!withinLimit) {
       await cleanup();
-      return res.status(429).json({
-        success: false,
-        message: `Daily upload limit reached (${MAX_DAILY_BYTES / 1024 / 1024}MB per day). Try again tomorrow.`,
-      });
+      return next(new ApiError(429, `Daily upload limit reached (${MAX_DAILY_BYTES / 1024 / 1024}MB per day). Try again tomorrow.`));
     }
 
     next();
   } catch (error) {
     console.error('[UploadValidator] Error:', error.message);
     await cleanup();
-    return res.status(500).json({
-      success: false,
-      message: 'File validation failed.',
-    });
+    return next(new ApiError(500, 'File validation failed.'));
   }
 };

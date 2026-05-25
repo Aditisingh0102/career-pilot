@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Deployments from './pages/Deployments'
 import TemplateGallery from "./pages/TemplateGallery";
@@ -24,6 +25,7 @@ import JobSearch from './pages/JobSearch';
 import JobAlerts from './pages/JobAlerts';
 import ResumeBuilder from './pages/ResumeBuilder';
 import TextToResume from './pages/TextToResume';
+import About from './components/portfolio/templates/Tech_Startup/About';
 
 
 import JobTracker from './pages/JobTracker';
@@ -151,6 +153,7 @@ function AppRoutes() {
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<PublicRoute><Home /></PublicRoute>} />
+        
         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
         <Route path="/auth/linkedin/callback" element={<LinkedInCallback />} />
@@ -158,6 +161,7 @@ function AppRoutes() {
 
         {/* Legal Pages (Public) */}
         <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/about" element={<About />} />
         <Route path="/terms" element={<TermsOfService />} />
         <Route path="/cookies" element={<CookiePolicy />} />
 

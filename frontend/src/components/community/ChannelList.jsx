@@ -49,13 +49,13 @@ export default function ChannelList({
   }, {});
 
   const categoryLabels = {
-    general: '💬 General',
-    'job-hunting': '🔍 Job Hunting',
-    'interview-prep': '🎯 Interview Prep',
-    'resume-tips': '📄 Resume Tips',
-    networking: '🤝 Networking',
-    announcements: '📢 Announcements',
-    other: '📌 Other'
+    general: 'General',
+    'job-hunting': 'Job Hunting',
+    'interview-prep': 'Interview Prep',
+    'resume-tips': 'Resume Tips',
+    networking: 'Networking',
+    announcements: 'Announcements',
+    other: 'Other'
   };
 
   const toggleCategory = (category) => {
@@ -141,7 +141,7 @@ export default function ChannelList({
                     {channel.type === 'private' ? (
                       <Lock className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                     ) : (
-                      <span className="text-base flex-shrink-0">{channel.icon || '💬'}</span>
+                      <Hash className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                     )}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1">

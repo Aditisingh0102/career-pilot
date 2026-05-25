@@ -303,6 +303,79 @@ export const resumeApi = {
       body: JSON.stringify({ text, jobRole })
     })
     return handleResponse(response)
+  },
+
+  // Get all versions of a resume
+  async getVersions(resumeId) {
+    const headers = await getAuthHeaders()
+    const response = await fetch(`${API_BASE}/resumes/${resumeId}/versions`, {
+      method: 'GET',
+      headers
+    })
+    return handleResponse(response)
+  },
+
+  // Create a new snapshot/version of a resume
+  async createVersion(resumeId, data) {
+    const headers = await getAuthHeaders()
+    const response = await fetch(`${API_BASE}/resumes/${resumeId}/versions`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(data)
+    })
+    return handleResponse(response)
+  },
+
+  // Update specific version metadata
+  async updateVersion(resumeId, versionId, data) {
+    const headers = await getAuthHeaders()
+    const response = await fetch(`${API_BASE}/resumes/${resumeId}/versions/${versionId}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify(data)
+    })
+    return handleResponse(response)
+  },
+
+  // Delete specific version
+  async deleteVersion(resumeId, versionId) {
+    const headers = await getAuthHeaders()
+    const response = await fetch(`${API_BASE}/resumes/${resumeId}/versions/${versionId}`, {
+      method: 'DELETE',
+      headers
+    })
+    return handleResponse(response)
+  },
+
+  // Restore resume to a specific version
+  async restoreVersion(resumeId, versionId) {
+    const headers = await getAuthHeaders()
+    const response = await fetch(`${API_BASE}/resumes/${resumeId}/versions/${versionId}/restore`, {
+      method: 'POST',
+      headers
+    })
+    return handleResponse(response)
+  },
+
+  // Get ATS score progression history
+  async getAtsHistory(resumeId) {
+    const headers = await getAuthHeaders()
+    const response = await fetch(`${API_BASE}/resumes/${resumeId}/ats-history`, {
+      method: 'GET',
+      headers
+    })
+    return handleResponse(response)
+  },
+
+  // Log a new ATS score run to history
+  async logAtsHistory(resumeId, data) {
+    const headers = await getAuthHeaders()
+    const response = await fetch(`${API_BASE}/resumes/${resumeId}/ats-history`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(data)
+    })
+    return handleResponse(response)
   }
 }
 
@@ -457,12 +530,28 @@ export const aiApi = {
   }
 }
 
+// Helper to build query params, properly serializing nested objects/arrays
+function buildParams(params) {
+  const usp = new URLSearchParams()
+  for (const [key, value] of Object.entries(params)) {
+    if (value === null || value === undefined) continue
+    if (Array.isArray(value)) {
+      value.forEach(v => usp.append(key, String(v)))
+    } else if (typeof value === 'object') {
+      usp.append(key, JSON.stringify(value))
+    } else {
+      usp.append(key, String(value))
+    }
+  }
+  return usp
+}
+
 // ============ JOBS API ============
 export const jobsApi = {
   // Search jobs with query
   async search(query, filters = {}) {
     const headers = await getAuthHeaders()
-    const params = new URLSearchParams({ query, ...filters })
+    const params = buildParams({ query, ...filters })
     const response = await fetch(`${API_BASE}/fetchjobs?${params}`, {
       method: 'GET',
       headers
@@ -497,10 +586,13 @@ export const jobTrackerApi = {
   // Update job application status
   async updateStatus(jobId, status, notes = '') {
     const headers = await getAuthHeaders()
+    const body = { status };
+    if (notes) body.notes = notes;
+    
     const response = await fetch(`${API_BASE}/job-tracker/${jobId}`, {
       method: 'PUT',
       headers,
-      body: JSON.stringify({ status, notes })
+      body: JSON.stringify(body)
     })
     return handleResponse(response)
   },

@@ -404,6 +404,26 @@ export default function Enhance() {
       }
 
       await resumeApi.update(resumeId, { jobRole })
+
+      // Log to ATS history
+      try {
+        await resumeApi.logAtsHistory(resumeId, {
+          jobRole: jobRole,
+          atsScore: atsResponse.data?.atsScore || 0,
+          scoreBreakdown: {
+            keywordMatch: atsResponse.data?.scoreBreakdown?.keywordMatch || 0,
+            formatting: atsResponse.data?.scoreBreakdown?.formatting || 0,
+            experienceRelevance: atsResponse.data?.scoreBreakdown?.experienceRelevance || 0,
+            skillsAlignment: atsResponse.data?.scoreBreakdown?.skillsAlignment || 0,
+            educationMatch: atsResponse.data?.scoreBreakdown?.educationMatch || 0
+          },
+          missingKeywords: atsResponse.data?.missingKeywords || [],
+          improvementsCount: atsResponse.data?.improvements?.length || 0
+        })
+      } catch (err) {
+        console.error('Failed to log ATS score run:', err)
+      }
+
       toast.success('Senior-level analysis complete!')
     } catch (error) {
       toast.error(error.message || 'Failed to analyze resume')
@@ -431,6 +451,20 @@ export default function Enhance() {
         jobRole: jobRole,
         preferences: apiPreferences
       })
+
+      // Create a version snapshot for the AI enhanced state
+      try {
+        await resumeApi.createVersion(resumeId, {
+          title: `AI Enhanced for ${jobRole}`,
+          originalText: resume.originalText,
+          enhancedText: enhanceResponse.data.enhancedResume,
+          jobRole: jobRole,
+          atsScore: atsAnalysis?.atsScore || null,
+          tags: ['AI-Enhanced', jobRole]
+        })
+      } catch (versionErr) {
+        console.error('Failed to auto-save version snapshot for AI enhancement:', versionErr)
+      }
 
       toast.success('Resume enhanced successfully!')
       triggerConfetti({ duration: 3000, particleCount: 150, spread: 120 })

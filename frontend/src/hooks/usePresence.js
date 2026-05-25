@@ -15,18 +15,11 @@ export function usePresence(userIds = []) {
   // Deduplicate so callers passing repeated IDs don't trigger extra subscriptions.
   const uniqueUserIds = [...new Set(safeUserIds)];
 
-  // Serialize to a collision-safe JSON string so that user IDs containing
-  // commas (or any delimiter) are encoded correctly. Sorting first ensures
-  // ['a','b'] and ['b','a'] produce the same key and don't trigger extra
-  // subscriptions due to order differences.
-  const serializedUserIds = useMemo(
-    () => (uniqueUserIds.length === 0 ? '' : JSON.stringify([...uniqueUserIds].sort())),
-    // We spread individual primitive IDs rather than passing the array reference
-    // so React can compare each element by value. Passing the array directly
-    // would always appear changed on re-renders with inline arrays.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [uniqueUserIds.length, ...uniqueUserIds]
-  );
+  // Serialize to a collision-safe primitive key so IDs containing commas (or
+  // any delimiter) are encoded correctly. Sorting first ensures ['a','b'] and
+  // ['b','a'] produce the same key and don't trigger extra subscriptions.
+  const serializedUserIds =
+    uniqueUserIds.length === 0 ? '' : JSON.stringify([...uniqueUserIds].sort());
 
   // Reconstruct a stable array reference from the parsed JSON so that inline
   // arrays (e.g. usePresence(['user1','user2'])) do not cause subscription
