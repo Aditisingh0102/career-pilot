@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { ArrowUpRight, FolderKanban } from "lucide-react";
-console.log("Projects component loaded");
 const projects = [
   {
     title: "FoldAI",
