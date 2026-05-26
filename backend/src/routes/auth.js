@@ -16,6 +16,7 @@ const router = express.Router();
 
 // Holds CSRF-protection state params for the LinkedIn OAuth initiation flow (10-min TTL)
 const stateStore = new Map();
+const tokenStore = new Map(); // one-time token exchange store
 
 // Holds single-use Firebase custom tokens keyed by a short-lived exchange code (60-sec TTL).
 // Tokens are never placed in redirect URLs — the frontend fetches them via GET /linkedin/token.
@@ -23,25 +24,34 @@ const linkedInTokenStore = new Map();
 
 // Example register endpoint with validation
 router.post('/register', validate(registerSchema), asyncHandler(async (req, res) => {
-  const { email, name, password } = req.body;
+  const { email, name } = req.body;
   const existingUser = await User.findOne({ email });
   if (existingUser) {
     return res.status(400).json({ success: false, error: 'User already exists' });
   }
-  const user = await User.create({ email, name, password });
+  const user = await User.create({
+    email,
+    username: name,
+  });
   res.status(201).json({
     success: true,
     message: 'User registered successfully',
-    user: { id: user._id, email: user.email, name: user.name }
+    user: { id: user._id, email: user.email, name: user.username }
   });
 }));
 
 // Sweep expired stateStore entries every 10 minutes to prevent memory leaks
+// Periodic sweep of expired store entries every 10 minutes to prevent memory leaks
 setInterval(() => {
   const now = Date.now();
   for (const [state, expiry] of stateStore.entries()) {
     if (now > expiry) {
       stateStore.delete(state);
+    }
+  }
+  for (const [code, entry] of tokenStore.entries()) {
+    if (now > entry.expiresAt) {
+      tokenStore.delete(code);
     }
   }
 }, 10 * 60 * 1000).unref();
@@ -90,7 +100,6 @@ router.get('/profile', verifyToken, asyncHandler(async (req, res) => {
 
 // Get notification preferences
 router.get('/notification-preferences', verifyToken, asyncHandler(async (req, res) => {
-  const User = (await import('../models/User.model.js')).default;
   const user = await User.findOne({ email: req.user.email });
 
   const preferences = user?.notificationPreferences || {
@@ -208,6 +217,9 @@ router.get('/linkedin/callback', asyncHandler(async (req, res) => {
     isNew: !mongoUser,
     expiresAt: Date.now() + 60 * 1000,
   });
+  // Store token in one-time exchange store (60s TTL) instead of passing in URL
+  const exchangeCode = crypto.randomBytes(16).toString('hex');
+  tokenStore.set(exchangeCode, { token: customToken, isNew: !mongoUser, expiresAt: Date.now() + 60000 });
 
   res.redirect(`${frontendUrl}/auth/linkedin/callback?code=${exchangeCode}`);
 }));
@@ -236,6 +248,16 @@ router.get('/linkedin/token', asyncHandler(async (req, res) => {
 
   linkedInTokenStore.delete(code);
 
+// One-time token exchange endpoint — frontend calls this after LinkedIn OAuth redirect
+// instead of receiving the Firebase custom token in the URL.
+router.get('/linkedin/token/:code', asyncHandler(async (req, res) => {
+  const { code } = req.params;
+  const entry = tokenStore.get(code);
+  if (!entry || Date.now() > entry.expiresAt) {
+    tokenStore.delete(code);
+    return res.status(404).json({ success: false, error: 'Code not found or expired' });
+  }
+  tokenStore.delete(code);
   res.json({ success: true, token: entry.token, isNew: entry.isNew });
 }));
 
