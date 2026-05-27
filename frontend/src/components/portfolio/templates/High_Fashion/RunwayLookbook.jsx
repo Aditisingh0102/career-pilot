@@ -8,7 +8,7 @@ export default function RunwayLookbook() {
 
       
         <h2 className="text-2xl font-semibold text-stone-300 font-serif">
-          High Fashion Theme- Runway Lookbook
+          High Fashion Theme - Runway Lookbook
         </h2>
 
        
