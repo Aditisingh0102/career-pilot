@@ -30,6 +30,7 @@ import TextToResume from './pages/TextToResume';
 import About from './components/portfolio/templates/Tech_Startup/About';
 import ChatbotPortfolio from "./components/portfolio/templates/Chatbot_Portfolio";
 import GamifiedXP from "./components/portfolio/templates/Gamified_XP";
+import TelescopeZoom from "./components/portfolio/templates/Telescope_Zoom";
 
 import JobTracker from './pages/JobTracker';
 const Community = lazy(() => import('./pages/Community'));
@@ -183,7 +184,7 @@ function AppRoutes() {
         <Route path="/templates" element={<RouteErrorBoundary><TemplateGallery /></RouteErrorBoundary>} />
         <Route path="/templates/chatbot" element={<ChatbotPortfolio />} />
         <Route path="/templates/gamified-xp" element={<GamifiedXP />} />
-        
+        <Route path="/templates/telescope-zoom" element={<TelescopeZoom />} />
         {/* Core Protected Routes */}
         <Route 
   path="/dashboard" 
