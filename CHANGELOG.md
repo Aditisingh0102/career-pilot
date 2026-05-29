@@ -1,3 +1,11 @@
+# [1.91.0](https://github.com/anurag3407/career-pilot/compare/v1.90.0...v1.91.0) (2026-05-29)
+
+
+### Features
+
+* **portfolio:** add custom CSS for retro VHS scanlines, noise, and glitch effects ([7553ea6](https://github.com/anurag3407/career-pilot/commit/7553ea6726cbb7db3fc088c8de7c9290643b74e5))
+* **portfolio:** build complete VHS Rewind template with responsive layout and animated sections ([bf5160f](https://github.com/anurag3407/career-pilot/commit/bf5160f5624d34895a09a6b54352c3edb478da94))
+
 # [1.90.0](https://github.com/anurag3407/career-pilot/compare/v1.89.0...v1.90.0) (2026-05-29)
 
 
