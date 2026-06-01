@@ -1,3 +1,15 @@
+# [1.124.0](https://github.com/anurag3407/career-pilot/compare/v1.123.0...v1.124.0) (2026-06-01)
+
+
+### Bug Fixes
+
+* update author to Advik Divekar in templates.js ([5653f14](https://github.com/anurag3407/career-pilot/commit/5653f14accd1d8adca1b2d04a1b9dad76556c716))
+
+
+### Features
+
+* implement Color Block portfolio template ([#1934](https://github.com/anurag3407/career-pilot/issues/1934)) ([3175bea](https://github.com/anurag3407/career-pilot/commit/3175bea222b732816c9d18ff9c5e3430ac559cd2))
+
 # [1.123.0](https://github.com/anurag3407/career-pilot/compare/v1.122.0...v1.123.0) (2026-06-01)
 
 
