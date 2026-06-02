@@ -983,7 +983,7 @@ export const templates = [
     "category": "Portfolio",
     "colorScheme": "Dark",
     "layout": "Grid",
-    "author": "System",
+    "author": "Advik Divekar",
     "views": 1081,
     "rating": 4.5,
     "image": "/template-previews/High_Fashion.png",
