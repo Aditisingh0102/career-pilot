@@ -1,4 +1,5 @@
-import { useTheme } from "../context/ThemeContext";
+import React, { useState, useRef, useEffect, Suspense, useMemo } from "react";
+import { useTheme } from "../hooks/useTheme";
 import Navbar from "../components/Navbar";
 import DeployModal from "../components/portfolio/DeployModal";
 import ThemeSelector from "../components/portfolio/ThemeSelector";
@@ -10,6 +11,21 @@ import ChooseAdventurePortfolio from "../components/portfolio/templates/Choose_A
 import WeatherMood from "../components/portfolio/templates/Weather_Mood/index";
 import SwissTypography from "../components/portfolio/templates/Swiss_Typography/index";
 import DesertDunes from "../components/portfolio/templates/Desert_Dunes/index";
+import { templates } from '../data/templates';
+import { motion, AnimatePresence } from "framer-motion";
+import { Moon, Sun, ChevronDown, Check, Eye, Star, Sparkles, X } from "lucide-react";
+import LiquidGlass from "../components/portfolio/templates/Liquid_Glass/index";
+import MidnightGradient from "../components/portfolio/templates/Midnight_Gradient/index";
+import PlayingCardsPortfolio from "../components/portfolio/templates/Playing_Cards";
+import CherryBlossom from "../components/portfolio/templates/Cherry_Blossom/index";
+import PsychedelicSwirl from "../components/portfolio/templates/Psychedelic_Swirl/index";
+import MemphisPop from "../components/portfolio/templates/Memphis_Pop/index";
+import CassetteMixtape from "../components/portfolio/templates/Cassette_Mixtape/index";
+import TypewriterEffect from "../components/portfolio/templates/Typewriter_Effect/index";
+import ChromaticGlitch from "../components/portfolio/templates/Chromatic_Glitch/index";
+import MagneticDock from "../components/portfolio/templates/Magnetic_Dock/index";
+import { useSearchParams } from "react-router-dom";
+import MorphingBlobs from "../components/portfolio/templates/Morphing_Blobs/index";
 
 /* TemplatePreviewFrame — contains each full portfolio template in a
    sandboxed scrollable box. The key trick: CSS `transform` on the outer
@@ -43,33 +59,25 @@ function TemplatePreviewFrame({ label, badgeColor, children }) {
     </div>
   );
 }
-import React, { useState, useRef, useEffect, Suspense, useMemo } from "react";
 import { templates } from '../data/templates';
-import DeployModal from "../components/portfolio/DeployModal";
-import ThemeSelector from "../components/portfolio/ThemeSelector";
-import { useTheme } from "../hooks/useTheme";
 import { motion, AnimatePresence } from "framer-motion";
 import { Moon, Sun, ChevronDown, Check, Eye, Star, Sparkles } from "lucide-react";
-import SwissTypography from "../components/portfolio/templates/Swiss_Typography/index";
 import LiquidGlass from "../components/portfolio/templates/Liquid_Glass/index";
 import MidnightGradient from "../components/portfolio/templates/Midnight_Gradient/index";
 import PlayingCardsPortfolio from "../components/portfolio/templates/Playing_Cards";
 import CherryBlossom from "../components/portfolio/templates/Cherry_Blossom/index";
 import PsychedelicSwirl from "../components/portfolio/templates/Psychedelic_Swirl/index";
-import DesertDunes from "../components/portfolio/templates/Desert_Dunes/index";
 import MemphisPop from "../components/portfolio/templates/Memphis_Pop/index";
 import CassetteMixtape from "../components/portfolio/templates/Cassette_Mixtape/index";
 import TypewriterEffect from "../components/portfolio/templates/Typewriter_Effect/index";
 import ChromaticGlitch from "../components/portfolio/templates/Chromatic_Glitch/index";
 import MagneticDock from "../components/portfolio/templates/Magnetic_Dock/index";
-import Navbar from '../components/Navbar'
 import { X } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 // import Hero from "../components/portfolio/templates/Holographic/Hero";
 // import ChooseAdventurePortfolio from "../components/portfolio/templates/Choose_Adventure/index";
 // import RetroProjects from "../components/portfolio/templates/2D_Retro_8bit/Projects";
 // import FantasyRPGProjects from "../components/portfolio/templates/Fantasy_RPG/Projects";
-import MorphingBlobs from "../components/portfolio/templates/Morphing_Blobs/index";
 
 
 function FilterSelect({ value, onChange, options, className = "" }) {
@@ -393,12 +401,11 @@ const [hoveredCard, setHoveredCard] = useState(null);
   });
 
   return (
-    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
-      <Navbar />
-      <div className="p-8 pt-24">
-      <div className="flex items-center mb-8">
-        <h1 className="text-4xl font-bold">Template Gallery</h1>
-          
+  <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
+    <Navbar />
+
+    <div className="p-8 pt-24">
+      
       {aiDraft && (
         <div className="mb-8 p-4 rounded-xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/30 flex items-center justify-between">
           <div>
@@ -607,7 +614,8 @@ const [hoveredCard, setHoveredCard] = useState(null);
         <DesertDunes />
       </TemplatePreviewFrame>
       </div>
-          <span className="rounded-full bg-red-500/20 px-3 py-1 text-xs font-bold uppercase tracking-widest text-red-400 border border-red-500/30">
+      <div className="mt-12">
+        <span className="rounded-full bg-red-500/20 px-3 py-1 text-xs font-bold uppercase tracking-widest text-red-400 border border-red-500/30">
             Preview
           </span>
           <h2 className="text-lg font-semibold text-foreground/70">Swiss Typography — Full Interactive Template</h2>
@@ -616,7 +624,7 @@ const [hoveredCard, setHoveredCard] = useState(null);
           <SwissTypography portfolioData={aiDraft} />
         </div>
       </div>
-      {/* Psychedelic Swirl Theme */}
+      
       <div className="mt-12">
         <div className="mb-4 flex items-center gap-3 px-1">
           <span className="rounded-full bg-fuchsia-500/20 px-3 py-1 text-xs font-bold uppercase tracking-widest text-fuchsia-400 border border-fuchsia-500/30">
@@ -697,8 +705,10 @@ const [hoveredCard, setHoveredCard] = useState(null);
           className="rounded-2xl border border-fuchsia-500/20"
           style={{ height: 640, overflowY: "auto", overflowX: "hidden", transform: "translate(0)", position: "relative" }}
         >
+          <PsychedelicSwirl />
+</div>
+</div>
       {/* Psychedelic Swirl — sandboxed fixed-nav frame */}
-      </div>
       <div className="mt-12">
         <div className="mb-4 flex items-center gap-3 px-1">
           <span className="rounded-full bg-fuchsia-500/20 px-3 py-1 text-xs font-bold uppercase tracking-widest text-fuchsia-400 border border-fuchsia-500/30">
@@ -761,7 +771,20 @@ const [hoveredCard, setHoveredCard] = useState(null);
       <div className="mt-12">
         <div className="mb-4 flex items-center gap-3 px-1">
           <span className="rounded-full px-3 py-1 text-xs font-bold uppercase tracking-widest border" style={{ background: "rgba(139,37,0,.1)", color: "#8B2500", borderColor: "rgba(139,37,0,.25)" }}>
-            <Typewriter Effect />
+            Typewriter Effect
+          </span>
+          <h2 className="text-lg font-semibold text-foreground/70">Typewriter Effect — Vintage Paper Full Template</h2>
+        </div>
+        <div className="rounded-2xl" style={{ height: 640, overflowY: "auto", overflowX: "hidden", transform: "translate(0)", position: "relative", border: "1px solid rgba(139,37,0,.2)" }}>
+          <TypewriterEffect />
+          </div>
+        </div>
+          
+      {/* Chromatic Glitch — sandboxed fixed-nav frame */}
+      <div className="mt-12">
+        <div className="mb-4 flex items-center gap-3 px-1">
+          <span className="rounded-full bg-cyan-500/20 px-3 py-1 text-xs font-bold uppercase tracking-widest text-cyan-400 border border-cyan-500/30">
+            ◈ Chromatic Glitch
           </span>
           <h2 className="text-lg font-semibold text-foreground/70">Chromatic Glitch — RGB Split / Colorful Full Template</h2>
         </div>
@@ -784,6 +807,8 @@ const [hoveredCard, setHoveredCard] = useState(null);
         </div>
       </div>
 
+            </div>
+      </div>
     </div>
     </div>
   
