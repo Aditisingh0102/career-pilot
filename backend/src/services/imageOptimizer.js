@@ -1,4 +1,5 @@
 import sharp from 'sharp';
+import { readFile } from 'fs/promises';
 
 /**
  * Optimize an image buffer into multiple target formats and sizes.
@@ -86,7 +87,7 @@ export async function optimizeBuffer(buffer, options = {}) {
 
 export async function optimizeFile(inputPath, options = {}) {
   if (typeof inputPath !== 'string') throw new TypeError('inputPath must be a string');
-  const buffer = await import('fs').then((fs) => fs.promises.readFile(inputPath));
+  const buffer = await readFile(inputPath);
   return optimizeBuffer(buffer, options);
 }
 

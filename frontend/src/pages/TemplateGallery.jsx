@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function TemplateGallery() {
   const [selectedCategory, setSelectedCategory] = useState("Portfolio");
+  const [brokenImages, setBrokenImages] = useState({});
   const navigate = useNavigate();
 
   const filteredTemplates = useMemo(() => {
@@ -45,22 +46,26 @@ export default function TemplateGallery() {
         {/* Templates Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredTemplates.map(template => (
-            <div
+            <button
+              type="button"
               key={template.id}
               onClick={() => handleSelectTemplate(template.id)}
-              className="group cursor-pointer rounded-xl border border-border overflow-hidden hover:border-cyan-400 transition-all hover:shadow-[0_0_20px_rgba(34,211,238,0.2)]"
+              className="group w-full text-left rounded-xl border border-border overflow-hidden transition-all hover:border-cyan-400 hover:shadow-[0_0_20px_rgba(34,211,238,0.2)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
             >
               {/* Template Preview Image */}
               <div className="relative h-48 bg-muted overflow-hidden">
-                <img
-                  src={template.image}
-                  alt={template.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                    e.target.parentElement.innerHTML = `<div class="w-full h-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center text-xs text-muted-foreground">${template.title}</div>`;
-                  }}
-                />
+                {brokenImages[template.id] ? (
+                  <div className="w-full h-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center text-xs text-muted-foreground">
+                    {template.title}
+                  </div>
+                ) : (
+                  <img
+                    src={template.image}
+                    alt={template.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    onError={() => setBrokenImages((prev) => ({ ...prev, [template.id]: true }))}
+                  />
+                )}
               </div>
 
               {/* Template Info */}
@@ -84,7 +89,7 @@ export default function TemplateGallery() {
                   </div>
                 </div>
               </div>
-            </div>
+            </button>
           ))}
         </div>
 
