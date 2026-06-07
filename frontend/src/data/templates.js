@@ -1,5 +1,18 @@
 export const templates = [
   {
+    "id": "Broken_Glass_Shards_Parallax",
+    "title": "Broken Glass Shards Parallax",
+    "category": "Portfolio",
+    "colorScheme": "Dark",
+    "layout": "Parallax",
+    "author": "System",
+    "views": 1000,
+    "rating": 5.0,
+    "image": "/templates/Broken_Glass_Shards_Parallax.png",
+    "createdAt": "2026-06-07",
+    "isComplete": true
+  },
+  {
     "id": "Interactive_Table_of_Elements",
     "title": "Interactive Table of Elements",
     "category": "Portfolio",

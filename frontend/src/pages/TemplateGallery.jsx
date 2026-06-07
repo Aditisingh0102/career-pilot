@@ -27,6 +27,7 @@ import MagneticDock from "../components/portfolio/templates/Magnetic_Dock/index"
 import { useSearchParams } from "react-router-dom";
 import MorphingBlobs from "../components/portfolio/templates/Morphing_Blobs/index";
 import InteractiveTableOfElements from "../components/portfolio/templates/Interactive_Table_of_Elements/index";
+import BrokenGlassShardsParallax from "../components/portfolio/templates/Broken_Glass_Shards_Parallax/index";
 
 /* TemplatePreviewFrame — contains each full portfolio template in a
    sandboxed scrollable box. The key trick: CSS `transform` on the outer
@@ -799,6 +800,20 @@ const [hoveredCard, setHoveredCard] = useState(null);
         <div className="rounded-2xl border border-sky-500/15"
           style={{ height: 640, overflowY: "auto", overflowX: "hidden", transform: "translate(0)", position: "relative" }}>
           <InteractiveTableOfElements />
+        </div>
+      </div>
+
+      {/* Broken Glass Shards Parallax — sandboxed fixed-nav frame */}
+      <div className="mt-12">
+        <div className="mb-4 flex items-center gap-3 px-1">
+          <span className="rounded-full bg-fuchsia-500/15 px-3 py-1 text-xs font-bold uppercase tracking-widest text-fuchsia-400 border border-fuchsia-500/25">
+            💎 Parallax Glass
+          </span>
+          <h2 className="text-lg font-semibold text-foreground/70">Broken Glass Shards Parallax — Kinetic Glassmorphism</h2>
+        </div>
+        <div className="rounded-2xl border border-fuchsia-500/15"
+          style={{ height: 640, overflowY: "auto", overflowX: "hidden", transform: "translate(0)", position: "relative" }}>
+          <BrokenGlassShardsParallax />
         </div>
       </div>
 

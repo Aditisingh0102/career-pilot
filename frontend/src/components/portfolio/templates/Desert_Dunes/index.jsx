@@ -227,7 +227,7 @@ function SectionLabel({ children, light = false }) {
 /* ─────────────────────────────────────────────
    NAV
 ───────────────────────────────────────────── */
-function Nav() {
+function Nav({ data }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -1239,7 +1239,7 @@ export default function DesertDunes() {
     <>
       <GlobalStyles />
       <div style={{ fontFamily: fontSans, overflowX: 'hidden' }}>
-        <Nav />
+        <Nav data={data} />
         <Hero />
         <About />
         <Skills />
