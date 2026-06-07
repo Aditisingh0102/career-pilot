@@ -1,3 +1,10 @@
+# [1.187.0](https://github.com/anurag3407/career-pilot/compare/v1.186.0...v1.187.0) (2026-06-07)
+
+
+### Features
+
+* **security:** add dependency security scanner CI workflow (closes [#2770](https://github.com/anurag3407/career-pilot/issues/2770)) ([0b6bcbc](https://github.com/anurag3407/career-pilot/commit/0b6bcbcbeea67d8fa976ddb15b2dae42a32bd7df))
+
 # [1.186.0](https://github.com/anurag3407/career-pilot/compare/v1.185.0...v1.186.0) (2026-06-07)
 
 
