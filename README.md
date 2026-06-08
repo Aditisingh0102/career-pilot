@@ -4,6 +4,10 @@
   
 </div>
 
+<div align="center" style="max-width:900px; margin:12px auto;">
+  <p style="margin-bottom:10px; text-align:center; font-size:1.05rem; color:var(--text-color, #e6edf3);">
+    Full-stack web app combining modern frontend and backend tooling
+  </p>
   <!-- Primary stack -->
   <p style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin:8px 0;">
     <img src="https://img.shields.io/badge/Node.js-20-green?logo=node.js&logoColor=white" alt="Node.js" />
