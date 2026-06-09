@@ -86,6 +86,7 @@ export default function Drawer({
   const [isOpen, setIsOpen] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
   const drawerRef = useRef(null)
+  const triggerRef = useRef(null)
   const location = useLocation()
 
   const pathname = location.pathname
@@ -99,15 +100,67 @@ export default function Drawer({
 
   const closeDrawer = () => {
     setIsOpen(false)
+    triggerRef.current?.focus()
   }
 
   useEffect(() => {
     if (!isMounted) return undefined
 
     if (isOpen) {
+      const focusableSelector = [
+        'button:not([disabled])',
+        '[href]',
+        'input:not([disabled])',
+        'select:not([disabled])',
+        'textarea:not([disabled])',
+        '[tabindex]:not([tabindex="-1"])',
+      ].join(', ')
+
+      const getFocusableElements = () =>
+        Array.from(drawerRef.current?.querySelectorAll(focusableSelector) ?? []).filter(
+          (element) => !element.hasAttribute('disabled') && element.tabIndex !== -1
+        )
+
+      const focusFirstElement = () => {
+        const focusableElements = getFocusableElements()
+        focusableElements[0]?.focus()
+      }
+
       const handleKeyDown = (event) => {
         if (event.key === 'Escape') {
           setIsOpen(false)
+          triggerRef.current?.focus()
+          return
+        }
+
+        if (event.key !== 'Tab') {
+          return
+        }
+
+        const focusableElements = getFocusableElements()
+
+        if (!focusableElements.length) {
+          event.preventDefault()
+          return
+        }
+
+        const firstElement = focusableElements[0]
+        const lastElement = focusableElements[focusableElements.length - 1]
+        const activeElement = document.activeElement
+        const isFocusInsideDrawer = drawerRef.current?.contains(activeElement)
+
+        if (event.shiftKey) {
+          if (!isFocusInsideDrawer || activeElement === firstElement) {
+            event.preventDefault()
+            lastElement.focus()
+          }
+
+          return
+        }
+
+        if (!isFocusInsideDrawer || activeElement === lastElement) {
+          event.preventDefault()
+          firstElement.focus()
         }
       }
 
@@ -115,12 +168,14 @@ export default function Drawer({
         if (!drawerRef.current) return
         if (drawerRef.current.contains(event.target)) return
         setIsOpen(false)
+        triggerRef.current?.focus()
       }
 
       const previousOverflow = document.body.style.overflow
       document.body.style.overflow = 'hidden'
       document.addEventListener('keydown', handleKeyDown)
       document.addEventListener('pointerdown', handlePointerDown)
+      focusFirstElement()
 
       return () => {
         document.body.style.overflow = previousOverflow
@@ -142,6 +197,7 @@ export default function Drawer({
     <div className={cn('md:hidden', className)}>
       <button
         type="button"
+        ref={triggerRef}
         onClick={openDrawer}
         aria-label={triggerLabel}
         aria-expanded={isOpen}
